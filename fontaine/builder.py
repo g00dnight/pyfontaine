@@ -12,7 +12,7 @@
 from __future__ import print_function
 import csv
 import os
-import StringIO
+from io import StringIO
 import sys
 import unicodedata
 
@@ -38,18 +38,18 @@ def format(x):
     if isinstance(x, str):
         return x
     return u'U+%04x\x20\x20%s\x20\x20%s' % \
-        (x, unichr(x), unicodedata.name(unichr(x), ''))
+        (x, chr(x), unicodedata.name(chr(x), ''))
 
 
 def unicodevalues_asstring(values):
     """ Return string with unicodenames (unless that is disabled) """
     if not os.environ.get('DISABLE_UNAMES'):
         return map(lambda x: '%s' % format(x).strip(), values)
-    return map(lambda x: u'U+%04x %s' % (x, unichr(x)), sorted(values))
+    return map(lambda x: u'U+%04x %s' % (x, chr(x)), sorted(values))
 
 
 extract_firstline = lambda text: \
-    (text or '').replace('\r', '\n').split('\n')[0]
+    (text or b'').replace(b'\r', b'\n').split(b'\n')[0]
 
 
 class Director(object):
@@ -415,7 +415,7 @@ def pprint_dict(obj, indent, length):
         if i + 1 == length:
             comma = ''
         if type(obj[key]) in [str, int, unicode]:
-            value = unicode(obj[key]).replace('\n', ', ').strip(', ')
+            value = str(obj[key]).replace('\n', ', ').strip(', ')
             value = value.replace('"', '\"').replace('\\', '\\\\')
             value = value.replace('\r', '')
             sys.stdout.write((u"%s  %r: \"%s\"%s" % (indent, key, value, comma)))

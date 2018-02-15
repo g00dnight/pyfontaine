@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # pyfontaine
@@ -19,7 +19,8 @@ import sys
 path = os.path.join(os.path.dirname(__file__), '..')
 sys.path.append(os.path.realpath(path))
 
-sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
+
+#sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
 
 from fontaine import VERSION
 from fontaine.cmap import library
@@ -175,7 +176,7 @@ def usage():
     parser.add_argument('-V', '--version', action='version',
                         version="%(prog)s " + param)
     if len(sys.argv) == 1:
-        print('pyFontaine %s (https://github.com/davelab6/pyfontaine)' % VERSION)
+        print('pyFontaine %s (https://github.com/davelab6/pyfontaine)', VERSION)
         parser.print_help()
         sys.exit(1)
     return parser.parse_args()
@@ -184,9 +185,6 @@ def usage():
 def check_for_unicodechar(char):
     if os.path.exists(char):
         return
-
-    # char = char.encode('ascii').decode('utf8')
-    char = char.decode('utf8')
 
     if len(char) == 1:
         return [ord(char)]
@@ -368,7 +366,7 @@ def main(*argv):
 
                     value = bool(len(true_values) == len(glyphs))
 
-                    glyph_unicode = str.upper('U+%04x' % ord(unichr(glyph)))
+                    glyph_unicode = str.upper('U+%04x' % ord(chr(glyph)))
                     if glyph_unicode not in header:
                         header.append(glyph_unicode)
                 row.append(str(value or ''))
@@ -382,7 +380,7 @@ def main(*argv):
             doc = UnicodeWriter(data, delimiter=',')
             doc.writerows([header] + rows)
             data.seek(0)
-            print(data.read().decode('utf-8'))
+            print(data.read())
         else:
             print(tabulate.tabulate(rows, header, tablefmt='plain'))
 
@@ -398,7 +396,7 @@ def main(*argv):
                 value = False
                 for glyph in glyphs:
                     value = glyph in unicodevalues
-                    glyph_unicode = str.upper('U+%04x' % ord(unichr(glyph)))
+                    glyph_unicode = str.upper('U+%04x' % ord(chr(glyph)))
                     if glyph_unicode not in header:
                         header.append(glyph_unicode)
                     row.append(str(value))
@@ -411,7 +409,7 @@ def main(*argv):
             doc = UnicodeWriter(data, delimiter=',')
             doc.writerows([header] + rows)
             data.seek(0)
-            print(data.read().decode('utf-8'))
+            print(data.read())
         else:
             print(tabulate.tabulate(rows, header, tablefmt='plain'))
 
@@ -432,7 +430,7 @@ class UnicodeWriter:
         self.writer.writerow([s.encode("utf-8") for s in row])
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()
-        data = data.decode("utf-8")
+
         # ... and reencode it into the target encoding
         data = self.encoder.encode(data)
         # write to the target stream

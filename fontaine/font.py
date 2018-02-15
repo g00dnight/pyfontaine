@@ -13,13 +13,13 @@ import os
 
 from fontaine.cmap import library
 from fontaine.const import *
-from fontTools.unicode import Unicode
+from fontTools.unicode import Unicode, unicode
 
 
 def unifyunicode(string):
-    if '\000' in string:
-        string = unicode(string, 'utf-16-be').encode('utf-8')
-    return string.decode('utf8', 'ignore')
+    if b'\000' in string:
+        string = str(string, 'utf-16-be').encode('utf-8')
+    return string
 
 
 def lookup_languages(unichar, _library=library):
@@ -35,7 +35,7 @@ def lookup_languages(unichar, _library=library):
         glyphs = getattr(charset, 'glyphs', [])
         if callable(glyphs):
             glyphs = glyphs()
-        if ord(unicode(unichar)) in glyphs:
+        if ord(str(unichar)) in glyphs:
             charsets.append(charset)
     return charsets
 
@@ -67,7 +67,7 @@ class FontFace(object):
         return self.ttf['name'].names
 
     def findName(self, nameid):
-        names = filter(lambda s: str(s.nameID) == str(nameid), self.getNames())
+        names = list(filter(lambda s: str(s.nameID) == str(nameid), self.getNames()))
         if not len(names):
             return
         return names[0]
@@ -191,6 +191,8 @@ class CharsetInfo(object):
         if callable(glyphs):
             glyphs = glyphs()
 
+        glyphs = list(glyphs)
+
         self.glyphs_in_charset_count = len(glyphs or [])
 
         self.hits = 0
@@ -271,7 +273,7 @@ class TTFont(object):
 
     @property
     def character_count(self):
-        return len(self._unicodeValues)
+        return len(list(self._unicodeValues))
     _character_count = 0
 
     @property
@@ -382,7 +384,7 @@ class FreeTypeFont(TTFont):
         sfnt_count = self._fontFace.sfnt_name_count
         if not isinstance(sfnt_count, int):
             return
-        for i in xrange(sfnt_count):
+        for i in range(sfnt_count):
             try:
                 sfnt_record = self._fontFace.get_sfnt_name(i)
             except freetype.FT_Exception:

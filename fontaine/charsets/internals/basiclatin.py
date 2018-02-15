@@ -6,7 +6,7 @@ class Charset:
     abbreviation = 'LAT'
 
     def glyphs(self):
-        return range(0x0041, 0x005A)
+        return list(range(0x0041, 0x005A))
 
     key = 0x0041
 

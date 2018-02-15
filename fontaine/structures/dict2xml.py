@@ -23,7 +23,7 @@ class dict2xml(object):
         self.doc = Document()
 
         if len(structure) == 1:
-            rootName = unicode(structure.keys()[0])
+            rootName = str(structure.keys()[0])
             self.root = self.doc.createElement(rootName)
 
             self.doc.appendChild(self.root)
@@ -55,7 +55,7 @@ class dict2xml(object):
                 grandFather.appendChild(tag)
 
         else:
-            data = unicode(structure)
+            data = str(structure)
             tag = self.doc.createTextNode(data)
             father.appendChild(tag)
 
@@ -72,7 +72,7 @@ class dict2txt(object):
 
         identical = structure.pop('identical', None)
         if len(structure) == 1:
-            rootName = unicode(structure.keys()[0])
+            rootName = str(list(structure.keys())[0])
             self.output += self.name(rootName) + '\n'
             if rootName.lower() == 'fonts' and identical is not None:
                 if identical:
@@ -105,7 +105,7 @@ class dict2txt(object):
             for k, l in enumerate(structure):
                 self.build(structure[k], indent + self.indent)
         elif structure:
-            self.output += u' %s' % unicode(structure) + '\n'
+            self.output += u' %s' % str(structure) + '\n'
 
     def display(self):
         sys.stdout.write(self.output)

@@ -34,7 +34,7 @@ def get_file(name, url):
         logging.warn('Updating {}'.format(name))
         directory = get_data_directory()
         filepath = op.join(directory, name)
-        with open(filepath, 'w') as f:
+        with open(filepath, 'wb') as f:
             f.write(r.content)
         return True
 
