@@ -300,7 +300,7 @@ class Builder(object):
                 #     continue
                 if charsetinfo.support_level == SUPPORT_LEVEL_UNSUPPORTED:
                     continue
-                print('{}% {}/{} {}'.format(charsetinfo.coverage, 
+                print('{}% {}/{} {}'.format(charsetinfo.coverage,
                                             charsetinfo.hits,
                                             charsetinfo.glyphs_count,
                                             subset.common_name.encode('ascii', 'ignore')))
@@ -414,7 +414,7 @@ def pprint_dict(obj, indent, length):
         comma = ', '
         if i + 1 == length:
             comma = ''
-        if type(obj[key]) in [str, int, unicode]:
+        if type(obj[key]) in [str, int]:
             value = str(obj[key]).replace('\n', ', ').strip(', ')
             value = value.replace('"', '\"').replace('\\', '\\\\')
             value = value.replace('\r', '')
@@ -429,7 +429,7 @@ def pprint(obj, indent='', items_length=0):
     if isinstance(obj, OrderedDict):
         length = len(obj.keys())
         if length == 1:
-            pprint(obj[obj.keys()[0]], indent, items_length=items_length)
+            pprint(obj[list(obj.keys())[0]], indent, items_length=items_length)
             return
 
         sys.stdout.write((u"%s{" % indent))
