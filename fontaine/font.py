@@ -222,7 +222,7 @@ class TTFont(object):
 
     def __init__(self, fontfile, charsets=[]):
         self._fontFace = FontFace(fontfile)
-        self._unicodeValues = self._fontFace.getCharset()
+        self._unicodeValues = list(self._fontFace.getCharset())
 
         self._charsets = [str.lower(x) for x in charsets]
         self.refresh_sfnt_properties()
@@ -273,7 +273,7 @@ class TTFont(object):
 
     @property
     def character_count(self):
-        return len(list(self._unicodeValues))
+        return len(self._unicodeValues)
     _character_count = 0
 
     @property
