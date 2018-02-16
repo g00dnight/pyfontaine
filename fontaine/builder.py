@@ -410,17 +410,26 @@ NAMES = {
 
 
 def pprint_dict(obj, indent, length):
+    def print_value(value):
+        value = value.replace('\n', ', ').strip(', ')
+        value = value.replace('"', '\"').replace('\\', '\\\\')
+        value = value.replace('\r', '')
+        sys.stdout.write((u"%s  \"%s\": \"%s\"%s" % (indent, key, value, comma)))
+
     for i, key in enumerate(obj.keys()):
         comma = ', '
         if i + 1 == length:
             comma = ''
-        if type(obj[key]) in [str, int]:
-            value = str(obj[key]).replace('\n', ', ').strip(', ')
-            value = value.replace('"', '\"').replace('\\', '\\\\')
-            value = value.replace('\r', '')
-            sys.stdout.write((u"%s  %r: \"%s\"%s" % (indent, key, value, comma)))
+
+        value_type = type(obj[key])
+        value = obj[key]
+        if value_type is bytes:
+            value = obj[key].decode('utf-8')
+            print_value(value)
+        elif value_type in [str, int, float]:
+            print_value(str(value))
         else:
-            sys.stdout.write((u"%s  %r:" % (indent, key)))
+            sys.stdout.write((u"%s  \"%s\":" % (indent, key)))
             pprint(obj[key], indent + '  ')
 
 
