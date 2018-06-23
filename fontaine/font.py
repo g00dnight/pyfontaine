@@ -300,7 +300,7 @@ class TTFont(object):
     @property
     def license(self):
         try:
-            return self._license.split('\n')[0]
+            return self._license.split(b'\n')[0]
         except IndexError:
             return self._license
     _license = ''

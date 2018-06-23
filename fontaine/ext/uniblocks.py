@@ -15,7 +15,7 @@ class Extension(BaseExt):
 
     @staticmethod
     def __getcharsets__():
-        content = open(get_from_cache('Blocks.txt', UNIDATA_URL), 'r').read()
+        content = open(get_from_cache('Blocks.txt', UNIDATA_URL), 'r', encoding='utf-8').read()
 
         regex = re.compile('^([\da-f]+)..([\da-f]+);\s*(.*)$', re.I | re.U)
         for line in content.split('\n'):
